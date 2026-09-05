@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "image-metadata-cleaner"
+version = "0.1.0"
+description = "Rebuild images as verified PNGs without embedded descriptive metadata."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "GPL-3.0-or-later"
+license-files = ["LICENSE"]
+dependencies = ["Pillow>=12.1.1,<13"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "Topic :: Multimedia :: Graphics :: Graphics Conversion",
+]
+
+[project.scripts]
+image-metadata-cleaner = "image_metadata_cleaner.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
