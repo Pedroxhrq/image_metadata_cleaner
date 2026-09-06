@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "image-metadata-cleaner"
 version = "0.1.0"
-description = "Rebuild images as verified PNGs without embedded descriptive metadata."
+description = "Remove descriptive image metadata with color preservation or sRGB conversion and PNG, WebP, or JPEG output."
 readme = "README.md"
 requires-python = ">=3.10"
 license = "GPL-3.0-or-later"
@@ -19,6 +19,9 @@ classifiers = [
 
 [project.scripts]
 image-metadata-cleaner = "image_metadata_cleaner.cli:main"
+
+[project.optional-dependencies]
+test = ["c2pa-python==0.37.10"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

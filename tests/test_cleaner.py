@@ -52,7 +52,7 @@ class CleanerTests(unittest.TestCase):
         self.assertEqual(offset, len(data))
         self.assertEqual(set(kinds), {b"IHDR", b"IDAT", b"IEND"})
 
-    def test_png_removes_text_exif_icc_c2pa_unknown_chunks_and_trailer(self):
+    def test_strip_color_removes_text_exif_icc_c2pa_unknown_chunks_and_trailer(self):
         metadata = PngImagePlugin.PngInfo()
         metadata.add_text("parameters", "AI prompt: synthetic test, seed: 123")
         metadata.add_text("workflow", "ComfyUI synthetic workflow", zip=True)
@@ -66,7 +66,7 @@ class CleanerTests(unittest.TestCase):
                            + png_chunk(b"prIv", b"unknown identification") + original[33:]
                            + b"appended provenance")
         original = source.read_bytes()
-        result = clean_image(source)
+        result = clean_image(source, strip_color=True)
         self.assertEqual(source.read_bytes(), original)
         self.assert_clean(result.destination)
         self.assertNotIn(b"synthetic", result.destination.read_bytes())
@@ -201,7 +201,7 @@ class CleanerTests(unittest.TestCase):
             with self.subTest(options=options), self.assertRaises(CleanerError):
                 clean_image(source, **options)
         with self.assertRaisesRegex(CleanerError, ".png"):
-            clean_image(source, self.root / "output.jpg")
+            clean_image(source, self.root / "output.avif")
 
     def test_rejects_high_bit_depth(self):
         for suffix in ("png", "tiff"):
@@ -237,8 +237,8 @@ class CleanerTests(unittest.TestCase):
         source = self.make_image()
         destination = self.root / "raced.png"
 
-        def race(path):
-            verify_clean_png(path)
+        def race(path, **options):
+            verify_clean_png(path, **options)
             destination.write_bytes(b"another process")
 
         with patch("image_metadata_cleaner.core.verify_clean_png", side_effect=race):

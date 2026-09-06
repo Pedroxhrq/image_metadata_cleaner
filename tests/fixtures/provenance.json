@@ -1,0 +1,17 @@
+{
+  "repository": "https://github.com/contentauth/c2pa-rs",
+  "revision": "8641fbac3971dc7163c4ba67d8c588f62c99761b",
+  "license": "MIT",
+  "files": [
+    {
+      "file": "C.jpg",
+      "source": "https://raw.githubusercontent.com/contentauth/c2pa-rs/8641fbac3971dc7163c4ba67d8c588f62c99761b/sdk/tests/fixtures/C.jpg",
+      "sha256": "a2d14755db55de67a47c04090340d8266e892367be4104a45626d7a6fa6e9ffd"
+    },
+    {
+      "file": "CA.jpg",
+      "source": "https://raw.githubusercontent.com/contentauth/c2pa-rs/8641fbac3971dc7163c4ba67d8c588f62c99761b/sdk/tests/fixtures/CA.jpg",
+      "sha256": "e71bff58fc57640803e6e65f7534e2fb0c2f99018c85276cc14b30f04427cc76"
+    }
+  ]
+}

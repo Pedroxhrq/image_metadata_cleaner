@@ -1,0 +1,76 @@
+name: Tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: ${{ matrix.os }} / Python ${{ matrix.python }} / Pillow ${{ matrix.pillow }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+        pillow: [latest]
+        include:
+          - os: ubuntu-latest
+            python: "3.10"
+            pillow: "12.1.1"
+    env:
+      REQUIRE_C2PA_TESTS: "1"
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install package and independent C2PA validator
+        run: python -m pip install ".[test]"
+      - name: Exercise minimum Pillow version
+        if: matrix.pillow != 'latest'
+        run: python -m pip install "Pillow==${{ matrix.pillow }}"
+      - name: Check installed dependencies
+        run: python -m pip check
+      - name: Run all tests including signed fixtures
+        run: python -m unittest discover -s tests -v
+      - name: Smoke test installed entry points
+        run: |
+          python -m image_metadata_cleaner --help
+          image-metadata-cleaner --version
+
+  package:
+    name: Build and test source distribution
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      REQUIRE_C2PA_TESTS: "1"
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.14"
+      - name: Build wheel and source distribution
+        run: |
+          python -m pip install build
+          python -m build
+      - name: Install wheel and test packaged fixtures from source distribution
+        shell: bash
+        run: |
+          python -m pip install dist/*.whl c2pa-python==0.37.10
+          mkdir sdist-check
+          tar -xzf dist/*.tar.gz -C sdist-check
+          cd sdist-check/*
+          python -m unittest discover -s tests -v
+          python -m pip check
