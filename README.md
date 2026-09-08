@@ -45,6 +45,21 @@ The examples below use `python` from the environment. In PowerShell you can repl
 `python` with `.\.venv\Scripts\python.exe`. An installed console command,
 `image-metadata-cleaner`, provides the same interface.
 
+**If you see `No module named image_metadata_cleaner`:** the Python executable
+running the command does not have this project installed. Installing into `.venv`
+does not install it into your regular Python. Use `.\.venv\Scripts\python.exe`
+as shown above, or, to use your regular Windows Python outside a virtual
+environment, install the project for your user account with that same interpreter:
+
+```powershell
+cd C:\Users\pedro\OneDrive\Documentos\Dev\image_metadata_cleaner
+python -m pip install --user -e .
+python -m image_metadata_cleaner --help
+```
+
+This editable installation uses the source files in this project folder. Repeat
+the installation if you move the folder or switch Python installations.
+
 ### Usage
 
 Clean one image while preserving supported colors; this creates
@@ -488,6 +503,21 @@ python3 -m venv .venv
 Os exemplos abaixo usam o `python` do ambiente virtual. No PowerShell, você pode
 substituir `python` por `.\.venv\Scripts\python.exe`. O comando de console instalado,
 `image-metadata-cleaner`, oferece a mesma interface.
+
+**Se aparecer `No module named image_metadata_cleaner`:** o executável Python
+usado no comando não tem este projeto instalado. Instalar em `.venv` não instala
+o projeto no Python comum. Use `.\.venv\Scripts\python.exe`, como mostrado acima,
+ou, para usar seu Python comum do Windows fora de um ambiente virtual, instale o
+projeto para sua conta de usuário com esse mesmo interpretador:
+
+```powershell
+cd C:\Users\pedro\OneDrive\Documentos\Dev\image_metadata_cleaner
+python -m pip install --user -e .
+python -m image_metadata_cleaner --help
+```
+
+Essa instalação editável usa os arquivos de código desta pasta do projeto. Repita
+a instalação se mover a pasta ou trocar de instalação do Python.
 
 ### Uso
 
